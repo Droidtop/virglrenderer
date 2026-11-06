@@ -76,6 +76,12 @@ int vrend_winsys_init(uint32_t flags, int preferred_fd)
       }
 
       use_context = CONTEXT_EGL;
+#elif defined(__ANDROID__)
+      egl = virgl_egl_init(NULL, flags & VIRGL_RENDERER_USE_SURFACELESS,
+                           flags & VIRGL_RENDERER_USE_GLES);
+      if (!egl)
+         return -1;
+      use_context = CONTEXT_EGL;
 #else
       (void)preferred_fd;
       virgl_error("EGL is not supported on this platform\n");
@@ -98,6 +104,13 @@ int vrend_winsys_init(uint32_t flags, int preferred_fd)
 
 void vrend_winsys_cleanup(void)
 {
+#ifdef __ANDROID__
+   if (use_context == CONTEXT_EGL) {
+      virgl_egl_destroy(egl);
+      egl = NULL;
+      use_context = CONTEXT_NONE;
+   }
+#endif
 #ifdef ENABLE_GBM
    if (use_context == CONTEXT_EGL) {
       virgl_egl_destroy(egl);

@@ -80,6 +80,7 @@ add_project_arguments(cc.get_supported_arguments(flags), language : 'c')
 prog_python = import('python').find_installation('python3')
 
 with_host_windows = host_machine.system() == 'windows'
+with_host_android = host_machine.system() == 'android'
 with_host_darwin = host_machine.system() == 'darwin'
 
 not_found = dependency('', required: false)
@@ -295,7 +296,7 @@ have_glx = false
 
 if with_egl
    if cc.has_header('epoxy/egl.h', dependencies: epoxy_dep) and epoxy_dep.get_variable(pkgconfig: 'epoxy_has_egl') == '1'
-      if with_host_windows or with_host_darwin
+      if with_host_windows or with_host_darwin or with_host_android
          have_egl = true
       else
          if libdrm_dep.found()
