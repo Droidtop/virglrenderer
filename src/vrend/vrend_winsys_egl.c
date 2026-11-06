@@ -391,14 +391,11 @@ struct virgl_egl *virgl_egl_init(EGLNativeDisplayType display_id, bool surfacele
       goto fail;
 
    extensions = eglQueryString(egl->egl_display, EGL_EXTENSIONS);
-#ifdef VIRGL_EGL_DEBUG
-   virgl_debug("EGL major/minor: %d.%d\n", major, minor);
-   virgl_debug("EGL version: %s\n",
+   virgl_info("EGL major/minor: %d.%d\n", major, minor);
+   virgl_info("EGL version: %s\n",
            eglQueryString(egl->egl_display, EGL_VERSION));
-   virgl_debug("EGL vendor: %s\n",
+   virgl_info("EGL vendor: %s\n",
            eglQueryString(egl->egl_display, EGL_VENDOR));
-   virgl_debug("EGL extensions: %s\n", extensions);
-#endif
 
    if (!virgl_egl_add_extensions(egl, extensions))
       goto fail;
@@ -591,13 +588,11 @@ struct virgl_egl *virgl_egl_init_external(EGLDisplay egl_display)
       goto fail;
 
    extensions = eglQueryString(egl->egl_display, EGL_EXTENSIONS);
-#ifdef VIRGL_EGL_DEBUG
-   virgl_debug("EGL version: %s\n",
+   virgl_info("EGL version: %s\n",
            eglQueryString(egl->egl_display, EGL_VERSION));
-   virgl_debug("EGL vendor: %s\n",
+   virgl_info("EGL vendor: %s\n",
            eglQueryString(egl->egl_display, EGL_VENDOR));
-   virgl_debug("EGL extensions: %s\n", extensions);
-#endif
+   virgl_info("EGL extensions: %s\n", extensions);
    if (!virgl_egl_add_extensions(egl, extensions))
       goto fail;
 
