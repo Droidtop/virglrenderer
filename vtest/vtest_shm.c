@@ -44,6 +44,30 @@ static int memfd_create(const char *name, unsigned int flags)
 #endif
 }
 
+#ifdef __ANDROID__
+#include <sys/ioctl.h>
+static int vtest_new_android_ashm(size_t size)
+{
+   int fd, ret;
+   long flags;
+   fd = open("/dev/ashmem", O_RDWR | O_CLOEXEC);
+   if (fd < 0)
+      return fd;
+   ret = ioctl(fd, /* ASHMEM_SET_SIZE */ _IOW(0x77, 3, size_t), size);
+   if (ret < 0)
+      goto err;
+   flags = fcntl(fd, F_GETFD);
+   if (flags == -1)
+      goto err;
+   if (fcntl(fd, F_SETFD, flags | FD_CLOEXEC) == -1)
+      goto err;
+   return fd;
+   err:
+   close(fd);
+   return -1;
+}
+#endif
+
 int vtest_new_shm(uint32_t handle, size_t size)
 {
    int fd, ret;
@@ -54,6 +78,12 @@ int vtest_new_shm(uint32_t handle, size_t size)
    fd = memfd_create(str, MFD_ALLOW_SEALING);
    free(str);
    if (fd < 0) {
+#ifdef __ANDROID__
+      fd = vtest_new_android_ashm(size);
+      if (fd > 0) {
+         return fd;
+      }
+#endif
       return report_failed_call("memfd_create", -errno);
    }
 
@@ -68,6 +98,10 @@ int vtest_new_shm(uint32_t handle, size_t size)
 
 int vtest_shm_check(void)
 {
+#ifdef __ANDROID__
+    return 1;
+#endif
+
     int mfd = memfd_create("test", MFD_ALLOW_SEALING);
 
     if (mfd >= 0) {
