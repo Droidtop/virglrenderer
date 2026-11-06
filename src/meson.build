@@ -42,6 +42,7 @@ vrend_sources = [
    'vrend/vrend_shader.c',
    'vrend/vrend_tweaks.c',
    'vrend/vrend_winsys.c',
+   'gl4es-decompress.c',
 ]
 
 virglrenderer_sources = [
