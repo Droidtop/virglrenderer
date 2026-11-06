@@ -58,6 +58,7 @@ vkr_dispatch_vkEnumerateInstanceExtensionProperties(
    args->ret = count == ARRAY_SIZE(private_extensions) ? VK_SUCCESS : VK_INCOMPLETE;
 }
 
+VKAPI_ATTR
 static VkBool32
 vkr_validation_callback(UNUSED VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
                         UNUSED VkDebugUtilsMessageTypeFlagsEXT messageTypes,
