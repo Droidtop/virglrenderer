@@ -244,7 +244,7 @@ foreach a : supported_function_attributes
   endif
 endforeach
 
-foreach f : ['memfd_create', 'strtok_r', 'timespec_get']
+foreach f : ['strtok_r']
   if cc.has_function(f)
     conf_data.set('HAVE_@0@'.format(f.to_upper()), 1)
   endif
